@@ -8,7 +8,7 @@ const OrderMange = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
-  const { orders, loading, error, updateLoading, updateError } = useSelector((state) => state.adminOrders);
+  const { orders, loading, error, updateError } = useSelector((state) => state.adminOrders);
   
   // Status update tracking to provide user feedback
   const [updatingOrderIds, setUpdatingOrderIds] = useState([]);
@@ -22,23 +22,20 @@ const OrderMange = () => {
   }, [dispatch, user, navigate]);
   
   const handleStatusChange = (orderId, newStatus) => {
-    console.log("Changing status for order:", orderId, "to:", newStatus);
-    
-    // Add this order ID to the updating list
     setUpdatingOrderIds(prev => [...prev, orderId]);
     
     dispatch(updateOrderStatus({ id: orderId, newStatus }))
       .then(() => {
-        // Remove this order ID from updating list after completion
+
         setUpdatingOrderIds(prev => prev.filter(id => id !== orderId));
       })
       .catch(() => {
-        // Also remove on error
+
         setUpdatingOrderIds(prev => prev.filter(id => id !== orderId));
       });
   };
   
-  // Helper function to check if an order is currently being updated
+
   const isUpdating = (orderId) => updatingOrderIds.includes(orderId);
 
   if (loading) return (

@@ -25,12 +25,11 @@ export const updateOrderStatus = createAsyncThunk(
   "admin/updateOrderStatus",
   async ({ id, newStatus }, { rejectWithValue }) => {
     try {
-      // Log the data being sent to API for debugging
       console.log("Updating order:", id, "with status:", newStatus);
       
       const response = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/${id}`,
-        { status: newStatus }, // Make sure this matches what your backend expects
+        { status: newStatus }, 
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -110,7 +109,6 @@ const adminOrderSlice = createSlice({
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         state.updateLoading = false;
         
-        // Handle different response structures
         let updatedOrder;
         if (action.payload.order) {
           updatedOrder = action.payload.order;
