@@ -23,7 +23,6 @@ const OrderConfirm = () => {
     }
   }, [checkout, dispatch, navigate]);
 
-  // Add guard clause to prevent rendering when checkout is null
   if (!checkout) {
     return <div className="text-center py-12">Loading order details...</div>;
   }
@@ -54,7 +53,7 @@ const OrderConfirm = () => {
           </div>
           <div className="mb-20">
             {checkout.checkoutItems && checkout.checkoutItems.map((item) => (
-              <div key={item._id || item.productId || index} className="flex items-center mb-4">
+              <div key={item._id || item.productId } className="flex items-center mb-4">
                 <img
                   src={item.image}
                   alt="product"

@@ -13,7 +13,6 @@ const UserManage = () => {
     if (user && user.role !== "Admin") {
       navigate("/");
     } else {
-      // Fetch users when component mounts
       dispatch(fetchUsers());
     }
   }, [user, navigate, dispatch]);

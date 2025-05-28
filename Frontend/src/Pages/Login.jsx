@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import login from "../assets/login.webp";
 import { loginUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +9,7 @@ import { mergeCart } from "../redux/slices/cartSlice";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,10 +31,16 @@ const Login = () => {
     }
   }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
   
-  const handelSubmit = (e) => {
+  const handelSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    setIsLoading(true);
+    try {
+      await dispatch(loginUser({ email, password }));
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <>
       <div className="flex mb-5 mt-5">
@@ -60,6 +68,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 ring-1 ring-gray-400 "
                 placeholder="Enter your Email"
+                disabled={isLoading}
               />
             </div>
             <div className="mb-4">
@@ -72,13 +81,25 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 ring-1 ring-gray-400  "
                 placeholder="Enter your password"
+                disabled={isLoading}
               />
             </div>
-            <button className="w-full bg-black text-white p-2 font-semibold rounded-lg hover:bg-gray-800 transition-colors">
-              Login
+            <button 
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-black text-white p-2 font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {isLoading ? (
+                <>
+                  <AiOutlineLoading3Quarters className="w-4 h-4 animate-spin mr-2" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
             </button>
             <p className="mt-6 text-center text-sm">
-              Don't have an account ? {"  "}
+              Don&apos;t have an account ? {"  "}
               <Link to={`/register?redirect=${encodeURIComponent(redirect)}`} className="text-blue-500">
                 Register
               </Link>
